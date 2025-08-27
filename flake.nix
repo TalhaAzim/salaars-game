@@ -16,15 +16,15 @@
       let
 	inherit idx;
         pkgs = nixpkgs.legacyPackages.${system};
-        dev-dot-nix = import "${idx}/dev.nix" { inherit pkgs; };
+        idxCfg = import (idx + /dev.nix) { inherit pkgs; };
       in
       {
         devShells.default = pkgs.mkShell {
           name = "saga";
-	  packages = dev-dot-nix.packages;
+	  packages = idxCfg.packages;
 	  shellHook = ''
 	    echo Entering Dev Shell
 	  '';
-	};
+	} // idxCfg.env;
       });
 }

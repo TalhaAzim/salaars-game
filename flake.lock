@@ -18,6 +18,18 @@
         "type": "github"
       }
     },
+    "idx": {
+      "flake": false,
+      "locked": {
+        "path": "./.idx",
+        "type": "path"
+      },
+      "original": {
+        "path": "./.idx",
+        "type": "path"
+      },
+      "parent": []
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1756125398,
@@ -37,6 +49,7 @@
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
+        "idx": "idx",
         "nixpkgs": "nixpkgs"
       }
     },

@@ -17,14 +17,17 @@
 	inherit idx;
         pkgs = nixpkgs.legacyPackages.${system};
         idxCfg = import (idx + /dev.nix) { inherit pkgs; };
+	reserved = [ "name" "pname" "version" "src" "buildInputs" "buildPhase" "installPhase" "builder" "shellHook" "inputsFrom" ];
+	idxEnv = pkgs.lib.filterAttrs (n: _: !(pkgs.lib.elem n reserved)) (pkgs.lib.mapAttrs (_: v: builtins.toString v) (idxCfg.env or {}));
+	mkShell = (idxEnv: shellInputs: pkgs.mkShellNoCC (idxEnv // shellInputs)) idxEnv;
       in
       {
-        devShells.default = pkgs.mkShell {
+        devShells.default = mkShell {
           name = "saga";
-	  packages = idxCfg.packages;
+	  packages = idxCfg.packages or [];
 	  shellHook = ''
 	    echo Entering Dev Shell
 	  '';
-	} // idxCfg.env;
+	};
       });
 }

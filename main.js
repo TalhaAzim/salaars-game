@@ -1,3 +1,36 @@
+const createStore = (reducer, initState) => {
+  let state = structuredClone(initState);
+  const listeners = new Set();
+
+  return {
+    getState: () => state,
+    subscribe: (fn) => {
+      listeners.add(fn);
+      return () => listeners.delete(fn);
+    },
+    dispatch: (action) => {
+      state = reducer(state, action);
+      listeners.forEach(fn => fn(state));
+    }
+  };
+};
+
+const createTypes = (ns="") => Object.freeze({
+  INIT: Symbol(`${ns}/Initialize`),
+  PUSH_G: Symbol(`${ns}/Push Grapheme`),
+  POP_G: Symbol(`${ns}/Pop Grapheme`),
+  CLEAR: Symbol(`${ns}/Clear`),
+  TOGGLE_MODE: Symbol(`${ns}/Toggle Mode`)
+});
+
+const createActions = (T) => Object.freeze({
+  init: () => ({ type: T.INIT}),
+  pushGrapheme: (grapheme) => ({ type: T.PUSH_G, payload: { grapheme } }),
+  popGrapheme: () => ({ type: T.POP_G }),
+  clear: () => ({ type: T.CLEAR }),
+  toggleMode: () => ({ type: T.TOGGLE_MODE })
+});
+
 class App {
   constructor(attrs) {
     this.init = attrs.init;

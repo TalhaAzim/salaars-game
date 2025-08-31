@@ -8,6 +8,7 @@
   packages = with pkgs; [
     nodejs_20
     python3
+    git
   ];
   # Sets environment variables in the workspace
   env = {

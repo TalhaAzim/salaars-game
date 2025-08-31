@@ -1,3 +1,5 @@
+import "./style.css"
+
 const createStore = (reducer, initState) => {
   let state = structuredClone(initState);
   const listeners = new Set();

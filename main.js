@@ -16,20 +16,27 @@ const createStore = (reducer, initState) => {
 };
 
 const createTypes = (ns="") => Object.freeze({
-  INIT: Symbol(`${ns}/Initialize`),
-  PUSH_G: Symbol(`${ns}/Push Grapheme`),
-  POP_G: Symbol(`${ns}/Pop Grapheme`),
-  CLEAR: Symbol(`${ns}/Clear`),
-  TOGGLE_MODE: Symbol(`${ns}/Toggle Mode`)
+  INIT: Symbol(`${ns}/INIT`),
+  PUSH_G: Symbol(`${ns}/PUSH_G`),
+  POP_G: Symbol(`${ns}/POP_G`),
+  CLEAR: Symbol(`${ns}/CLEAR`),
+  TOGGLE_MODE: Symbol(`${ns}/TOGGLE_MODE`)
 });
 
-const createActions = (T) => Object.freeze({
-  init: () => ({ type: T.INIT}),
-  pushGrapheme: (grapheme) => ({ type: T.PUSH_G, payload: { grapheme } }),
-  popGrapheme: () => ({ type: T.POP_G }),
-  clear: () => ({ type: T.CLEAR }),
-  toggleMode: () => ({ type: T.TOGGLE_MODE })
-});
+const createActionSet = (T) => {
+  const symbolKeys = new Map(Object.entries(T).map(([k, v]) => [v, k]));
+  return {
+    actions: Object.freeze({
+      init: () => ({ type: T.INIT}),
+      pushGrapheme: (grapheme) => ({ type: T.PUSH_G, payload: { grapheme } }),
+      popGrapheme: () => ({ type: T.POP_G }),
+      clear: () => ({ type: T.CLEAR }),
+      toggleMode: () => ({ type: T.TOGGLE_MODE })
+    }),
+    symbolFor: (k) => symbolKeys.get(k),
+    keyFor: (s) => T[s],
+  };
+};
 
 class App {
   constructor(attrs) {

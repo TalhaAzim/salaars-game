@@ -40,66 +40,13 @@ const createActionSet = (T) => {
   };
 };
 
-class App {
-  constructor(attrs) {
-    this.init = attrs.init;
-    this.state = structuredClone(this.init);
-    this.root = attrs.root;
-    this.root.appendChild(document.createElement('game-shell'));
-  }
-}
+const createReducer = (T, { validate, prefixPossible }) => {
 
-class GameShell extends HTMLElement {
-  constructor() {
-    super();
-  }
-  connectedCallback() {
-    this.appendChild(document.createElement('image-visor'));
-    this.appendChild(document.createElement('word-assembly'));
-    this.appendChild(document.createElement('tile-box'));
-  }
-}
-customElements.define('game-shell', GameShell);
+    const LEXEMES = ["APPLE", "BABA", "BANANA", "BATH", "CAR", "CANDY", "MAMA", "PARK", "WALK", "WATER", "ZOO"];
 
-class ImageVisor extends HTMLElement {
-  constructor() {
-    super();
-  }
-  connectedCallback() {
-    this.elem = document.createElement('div');
-    this.elem.textContent = "Image Visor";
-    this.appendChild(this.elem);
-  }
+    const GRAPHEMES = new Set(LEXEMES.flatMap(lexeme => Array.from(lexeme)));
+    
+    const computeAllowedNext = (s) => {
+	if (s.mode === 'SANDBOX') return new Set (GRAPHEMES);
+    }
 }
-customElements.define('image-visor', ImageVisor);
-
-class WordAssembly extends HTMLElement {
-  constructor() {
-    super();
-  }
-  connectedCallback() {
-    this.elem = document.createElement('div');
-    this.elem.textContent = "Assembly area";
-    this.appendChild(this.elem);
-  }
-}
-customElements.define('word-assembly', WordAssembly);
-
-class TileBox extends HTMLElement {
-  constructor() {
-    super();
-  }
-  connectedCallback() {
-    this.elem = document.createElement('div');
-    this.elem.textContent = "Tile box";
-    this.appendChild(this.elem);
-  }
-}
-customElements.define('tile-box', TileBox);
-
-const app = new App({
-  init: {
-    alphabet: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-  },
-  root: document.getElementById('root')
-});
